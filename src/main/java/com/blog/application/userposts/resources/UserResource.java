@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import com.blog.application.userposts.services.UserService;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping(path = "/")
 public class UserResource {
 
 	
@@ -27,12 +27,12 @@ public class UserResource {
 		// TODO Auto-generated constructor stub
 		this.service = service;
 	}
-	
-	@PostMapping("/")
-	public String index() {
-		return "Welcome to Blog app!";
-	}
-	
+
+	/**
+	 * End point for user login
+	 * @param userMap
+	 * @return
+	 */
 	@PostMapping("/user/login")
 	public ResponseEntity<String> userLogin(@RequestBody Map<String, String> userMap) {
 		service.admin = userMap.get("admin").equals("true") ? true : false;
@@ -44,11 +44,20 @@ public class UserResource {
 		}		
 	}
 	
+	/**
+	 * End point for user logout
+	 * @return
+	 */
 	@PostMapping("/user/logout")
-	public ResponseEntity<String> userLogout() {		
+	public ResponseEntity<String> userLogout() {
+		service.admin = false;
 		return new ResponseEntity<>("User logged out successfully.", HttpStatus.OK);		
 	}
 	
+	/**
+	 * End point to return all users registered to blog app
+	 * @return
+	 */
 	@GetMapping("/users")
 	public ResponseEntity<String> getUsers() {
 		if(service.admin) {
@@ -58,9 +67,14 @@ public class UserResource {
 			return new ResponseEntity<String>(response, HttpStatus.OK);
 		} 
 		else
-			return new ResponseEntity<String>("Data not found", HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>("Unauthorized user", HttpStatus.UNAUTHORIZED);
 	}
 	
+	/**
+	 * End point to get user and related posts
+	 * @param id
+	 * @return
+	 */
 	@GetMapping(value = "/user/posts/{id}")
 	@ResponseBody
 	public ResponseEntity<Map<String, List<Object>>> getSpecificUser(@PathVariable("id") int id) {		
@@ -79,7 +93,7 @@ public class UserResource {
 			return new ResponseEntity<Map<String, List<Object>>>(data, HttpStatus.OK);
 		} 
 		else
-			return new ResponseEntity<Map<String, List<Object>>>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<Map<String, List<Object>>>(new HashMap<String, List<Object>>(),HttpStatus.UNAUTHORIZED);
 	}
 	
 }

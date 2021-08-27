@@ -23,10 +23,15 @@ public class UserService {
 		// TODO Auto-generated constructor stub		
 	}
 	
+	/**
+	 * Consuming REST Api to list users
+	 * @param id
+	 * @return
+	 */
 	public List<Object> getUser(int id){
 		RestTemplate template = new RestTemplate();
 		String url = "https://jsonplaceholder.typicode.com/users";
-		System.out.println("List value: ");
+		
 		User[] response = template.getForObject(url, User[].class, new Object[]{ id });
 
 		List<Object> list = Arrays.stream(response)
@@ -36,6 +41,11 @@ public class UserService {
 		return list;
 	}
 	
+	/**
+	 * Consuming REST api to list posts
+	 * @param id
+	 * @return
+	 */
 	public List<Object> getPosts(int id) {
 		RestTemplate template = new RestTemplate();
 		String url = "https://jsonplaceholder.typicode.com/posts";
